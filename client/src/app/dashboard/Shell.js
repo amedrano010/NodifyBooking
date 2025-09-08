@@ -15,7 +15,7 @@ import {
     CreditCardIcon,
 } from "@heroicons/react/24/outline";
 
-import { useUser } from "./context/userContext";
+import { useUser } from "../context/userContext";
 import { useState, createContext, useContext } from "react";
 
 import { Spinner } from "flowbite-react";
@@ -27,38 +27,38 @@ function Shell({ children }) {
     const navLinks = [
         {
             name: "Dashboard",
-            href: "/",
+            href: "/dashboard",
             icon: <HomeIcon className="h-5" />,
         },
 
         {
             name: "Calendar",
-            href: "/calendar",
+            href: "/dashboard/calendar",
             icon: <CalendarIcon className="h-5" />,
         },
 
         {
             name: "POS",
-            href: "/pos",
+            href: "/dashboard/pos",
             icon: <ShoppingCartIcon className="h-5  " />,
             class: "",
         },
         {
             name: "Team",
-            href: "/team",
+            href: "/dashboard/team",
             icon: <UserGroupIcon className="h-5 " />,
-            class: "",
+            class: "hidden",
         },
 
         {
-            name: "Customers",
-            href: "/customers",
+            name: "Clients",
+            href: "/dashboard/clients",
             icon: <FaceSmileIcon className="h-5 " />,
             class: "",
         },
         {
             name: "Billing",
-            href: "/billing",
+            href: "/dashboard/billing",
             icon: <CreditCardIcon className="h-5 " />,
             class: "",
         },
@@ -71,7 +71,7 @@ function Shell({ children }) {
                     <Spinner size="xl" aria-label="loading page spinner" />
                 </div>
             ) : (
-                <div className="h-screen w-screen flex bg-neutral-100 overflow-hidden">
+                <div className="h-screen w-screen flex bg-neutral-200 overflow-hidden">
                     <Sidebar isOpen={sidebarOpen} navLinks={navLinks} />
 
                     <div className="flex-grow flex flex-col overflow-y-hidden">
@@ -81,7 +81,7 @@ function Shell({ children }) {
                             setSidebarOpen={setSidebarOpen}
                             navLinks={navLinks}
                         />
-                        <div className="flex-grow overflow-y-auto overflow-x-hidden py-2 px-4 lg:px-8 lg:pb-8 lg:pt-4 text-gray-600">
+                        <div className="flex-grow overflow-y-auto overflow-x-hidden  ">
                             {children}
                         </div>
                     </div>

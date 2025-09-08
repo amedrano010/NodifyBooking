@@ -8,7 +8,7 @@ import { Breadcrumb } from "flowbite-react";
 import TimeSlot from "../Components/TimeSlot";
 import moment from "moment";
 import { PlusCircleIcon } from "@heroicons/react/24/outline";
-import { UserContext } from "../Context/UserContext";
+import { UserContext } from "../../context/UserContext";
 
 export default function Component({
     openModal,

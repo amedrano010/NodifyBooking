@@ -1,12 +1,12 @@
 "use client";
 import React, { useState, useEffect, useContext } from "react";
 import { PlusCircleIcon } from "@heroicons/react/24/outline";
-import Table from "../../components/ui/Table";
-import Modal from "../../components/ui/Modal";
+import Table from "./Table";
+import Modal from "../../../components/ui/Modal";
 import CustomerForm from "../forms/CustomerForm";
 import axios from "axios";
 import { List } from "flowbite-react";
-import { useUser } from "../context/userContext";
+import { useUser } from "../../context/userContext";
 
 function Customers() {
     const baseUrl = process.env.REACT_APP_BASE_URL;
@@ -15,7 +15,41 @@ function Customers() {
     const [searchTerm, setSearchTerm] = useState(""); // Search input state+
     const [modal, setModal] = useState(false);
     const [cells] = useState(["name", "phone", "email"]);
-    const [data, setData] = useState([]);
+    const [data, setData] = useState([
+        {
+            name: "Abram",
+            last: "Medrano",
+            phone: "2616584146",
+            email: "abrmmedrano10@gmail.com",
+            visits: 20,
+            history: [
+                {
+                    services: [],
+                    cost: 800,
+                    status: "Scheduled",
+                    date: new Date(),
+                },
+                {
+                    services: [],
+                    cost: 800,
+                    status: "Cancelled",
+                    date: new Date(),
+                },
+                {
+                    services: [],
+                    cost: 800,
+                    status: "Completed",
+                    date: new Date(),
+                },
+                {
+                    services: [],
+                    cost: 800,
+                    status: "Completed",
+                    date: new Date(),
+                },
+            ],
+        },
+    ]);
     const [tableLoaded, setTableLoaded] = useState(false);
 
     const filteredData = data.filter((user) => {
@@ -38,6 +72,8 @@ function Customers() {
             return true;
         }
     });
+
+    console.log(filteredData);
 
     //Form
     const [formType, setFormType] = useState("New");
@@ -189,29 +225,18 @@ function Customers() {
 
     return (
         <div className="flex flex-col h-full max-h-full">
-            <div className="h-fit pb-2 text-2xl font-semibold">Customers</div>
             <div className="card flex flex-col h-full lg:h-full gap-2 overflow-y-hidden">
-                <nav className="flex items-center justify-between gap-2">
+                <div className="title">Clients</div>
+                <nav className="flex items-center gap-2 border-b pb-2 border-gray-200 h-12">
                     <input
-                        className="border border-slate-300 flex-grow"
+                        className="border border-slate-300 flex-grow h-full bg-white"
                         type="text"
                         placeholder="Search..."
                         value={searchTerm}
                         onChange={(e) => setSearchTerm(e.target.value)}
                     />
-
-                    <div
-                        className="px-4 w-fit py-2 bg-rose-400 shadow-md text-white rounded-sm flex justify-center items-center gap-1 cursor-pointer"
-                        onClick={() => {
-                            setModal(true);
-                            setFormType("New");
-                        }}
-                    >
-                        <PlusCircleIcon className="h-5" />
-                        <span className="hidden lg:block">Add Customer</span>
-                    </div>
                 </nav>
-                <div className="">
+                <div className="h-full ">
                     <Table
                         data={filteredData}
                         cells={cells}

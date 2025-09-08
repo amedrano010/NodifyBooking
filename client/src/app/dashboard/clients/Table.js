@@ -5,9 +5,11 @@ import {
     TableHead,
     TableHeadCell,
     TableRow,
+    Spinner,
 } from "flowbite-react";
 import { EllipsisHorizontalIcon } from "@heroicons/react/16/solid";
 import { Avatar } from "flowbite-react";
+import { Tab } from "@headlessui/react";
 
 export default function Component({
     headers,
@@ -98,68 +100,53 @@ export default function Component({
     };
 
     return (
-        <div className="overflow-x-auto h-full relative">
-            <div
-                className={`absolute top-1/2 left-1/2  -translate-x-1/2 -translate-y-1/2 font-semibold ${
-                    data.length > 0 ? "hidden" : ""
-                }`}
-            >
-                No Data
-            </div>
-            <Table striped className={tableTheme}>
+        <div className="overflow-x-auto   h-full  ">
+            <Table striped theme={tableTheme} className="">
                 <TableHead>
                     <TableRow>
-                        {" "}
-                        {cells?.map((header, i) => {
-                            return (
-                                <TableHeadCell className="pl-1" key={i}>
-                                    {header}
-                                </TableHeadCell>
-                            );
-                        })}
+                        <TableHeadCell className="pl-1">Name</TableHeadCell>
+                        <TableHeadCell className="pl-1">Phone</TableHeadCell>
+
+                        <TableHeadCell className="pl-1"></TableHeadCell>
                     </TableRow>
                 </TableHead>
 
-                {tableLoaded ? (
+                {true ? (
                     <TableBody className="divide-y relative">
                         {data.map((user, i) => {
                             return (
                                 <TableRow
                                     key={i}
-                                    className="cursor-pointer hover:bg-gray-100"
+                                    className="cursor-pointer hover:bg-gray-100 "
                                     onClick={() => {
                                         handleMorePress(user);
                                     }}
                                 >
-                                    {cells?.map((cell, i) => {
-                                        return (
-                                            <TableCell
-                                                key={`${cell} ${i}`}
-                                                className="whitespace-nowrap text-sm lg:text-base text-gray-700 dark:text-white px-1"
-                                            >
-                                                {cell === "avatar" ? (
-                                                    <Avatar
-                                                        rounded
-                                                        img={user[cell]}
-                                                        status="online"
-                                                        theme={avatarTheme}
-                                                    />
-                                                ) : (
-                                                    user[cell]
-                                                )}
-                                            </TableCell>
-                                        );
-                                    })}
+                                    <TableCell
+                                        key={`name${i}`}
+                                        className="whitespace-nowrap text-sm lg:text-base text-gray-700 dark:text-white px-2 "
+                                    >
+                                        {user.name} {user.last}
+                                    </TableCell>
+                                    <TableCell
+                                        key={`name${i}`}
+                                        className="whitespace-nowrap text-sm lg:text-base text-gray-700 dark:text-white px-1"
+                                    >
+                                        {user.phone}
+                                    </TableCell>
+
+                                    <TableCell
+                                        key={`name${i}`}
+                                        className="whitespace-nowrap text-sm lg:text-base text-gray-700 dark:text-white px-1"
+                                    >
+                                        <EllipsisHorizontalIcon className="h-5 w-5" />
+                                    </TableCell>
                                 </TableRow>
                             );
                         })}
                     </TableBody>
                 ) : (
-                    <TableBody className="flex justify-center items center w-full h-full">
-                        <TableRow>
-                            <TableCell>Loading...</TableCell>
-                        </TableRow>
-                    </TableBody>
+                    <></>
                 )}
             </Table>
         </div>

@@ -8,7 +8,7 @@ import {
     PhotoIcon,
 } from "@heroicons/react/16/solid";
 
-import { useUser } from "../context/userContext.js";
+import { useUser } from "../../context/userContext.js";
 
 function GridTable({ view, items, setItems, fetchProducts, fetchServices }) {
     const { user } = useUser;
@@ -340,7 +340,7 @@ function GridTable({ view, items, setItems, fetchProducts, fetchServices }) {
                 return (
                     <div
                         key={i}
-                        className="h-56 sm: w-full lg:h-64 flex flex-col rounded-lg bg-white border shadow-md cursor-pointer"
+                        className="h-64 sm: w-full lg:h-64 flex flex-col rounded-sm  bg-white   cursor-pointer border border-gray-200 "
                     >
                         <div
                             onClick={() => {
@@ -363,7 +363,7 @@ function GridTable({ view, items, setItems, fetchProducts, fetchServices }) {
                                     setServiceForm(item);
                                 }
                             }}
-                            className="image flex-grow rounded-t-lg overflow-hidden "
+                            className="image flex-grow rounded-t-sm overflow-hidden  "
                         >
                             {item.images.length > 0 ? (
                                 <>
@@ -380,76 +380,62 @@ function GridTable({ view, items, setItems, fetchProducts, fetchServices }) {
                                     />
                                 </>
                             ) : (
-                                <div className="flex px-2 text-white justify-center items-center h-full text-center bg-gray-300">
+                                <div className="flex px-2 text-white justify-center items-center h-full text-center bg-neutral-200">
                                     <PhotoIcon className="h-10" />
                                 </div>
                             )}
                         </div>
-                        <div className="px-2 pt-2 w-full max-w-full">
-                            <div className="text-base font-medium text-gray-600 overflow-x-hidden text-overflow whitespace-nowrap text-ellipsis">
-                                {item.name}
-                            </div>
-                            <div className="text-xs sm:text-base">
-                                ${item.price}
-                            </div>
-                        </div>
-                        <div className="flex justify-center">
-                            <form className="max-w-xs mx-auto w-full flex justify-center">
-                                <div className="relative flex items-center">
-                                    <button
-                                        type="button"
-                                        id="decrement-button"
-                                        className=" rounded-sm text-white "
-                                        onClick={() => decrement(item._id)}
-                                    >
-                                        <MinusCircleIcon className="h-5 sm:h-6 text-gray-400" />
-                                    </button>
-                                    <input
-                                        type="text"
-                                        id="counter-input"
-                                        data-input-counter
-                                        className=" text-gray-900 border-0 bg-transparent text-sm sm:text-base font-normal max-w-[2.5rem] text-center "
-                                        placeholder=""
-                                        onChange={(e) =>
-                                            handleCountChange(e, item._id)
-                                        }
-                                        value={
-                                            item.quantity ? item.quantity : 0
-                                        }
-                                        readOnly
-                                    />
-                                    <button
-                                        type="button"
-                                        id="increment-button"
-                                        className="rounded-sm text-white "
-                                        onClick={() => increment(item._id)}
-                                    >
-                                        <PlusCircleIcon className="h-5 sm:h-6 text-gray-400" />
-                                    </button>
+                        <div className=" p-1">
+                            <div className="px-2 pt-2 w-full max-w-full">
+                                <div className="text-lg  text-gray-600 overflow-x-hidden text-overflow whitespace-nowrap text-ellipsis">
+                                    {item.name}
                                 </div>
-                            </form>
+                                <div className="text-sm sm:text-base">
+                                    ${item.price}
+                                </div>
+                            </div>
+                            <div className="flex justify-center ">
+                                <form className="max-w-xs mx-auto w-full flex justify-center">
+                                    <div className="relative flex items-center ">
+                                        <button
+                                            type="button"
+                                            id="decrement-button"
+                                            className=" rounded-sm text-white "
+                                            onClick={() => decrement(item._id)}
+                                        >
+                                            <MinusCircleIcon className="h-5 sm:h-6 text-gray-400" />
+                                        </button>
+                                        <input
+                                            type="text"
+                                            id="counter-input"
+                                            data-input-counter
+                                            className=" text-gray-900 border-0 bg-transparent text-sm sm:text-base font-normal max-w-[2.5rem] text-center "
+                                            placeholder=""
+                                            onChange={(e) =>
+                                                handleCountChange(e, item._id)
+                                            }
+                                            value={
+                                                item.quantity
+                                                    ? item.quantity
+                                                    : 0
+                                            }
+                                            readOnly
+                                        />
+                                        <button
+                                            type="button"
+                                            id="increment-button"
+                                            className="rounded-sm text-white "
+                                            onClick={() => increment(item._id)}
+                                        >
+                                            <PlusCircleIcon className="h-5 sm:h-6 text-gray-400" />
+                                        </button>
+                                    </div>
+                                </form>
+                            </div>
                         </div>
                     </div>
                 );
             })}
-            <div
-                onClick={() => {
-                    if (view === "Products")
-                        setProductModal({
-                            type: "New",
-                            open: true,
-                            page: 1,
-                        });
-                    if (view === "Services")
-                        setServiceModal({
-                            type: "New",
-                            open: true,
-                        });
-                }}
-                className="bg-gray-300 h-56 lg:h-64  text-white w-full flex flex-col rounded-lg  shadow-md justify-center items-center cursor-pointer"
-            >
-                <PlusCircleIcon className="h-6 " />
-            </div>
 
             <ProductForm
                 productErrors={productErrors}

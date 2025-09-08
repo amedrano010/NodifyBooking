@@ -9,7 +9,7 @@ import {
 import { Avatar, List, ListItem, Table, Checkbox } from "flowbite-react";
 import TeamForm from "../forms/TeamForm";
 import axios from "axios";
-import { useUser } from "../context/userContext";
+import { useUser } from "../../context/userContext";
 
 function Team(props) {
     const avatarTheme = {
@@ -251,13 +251,13 @@ function Team(props) {
 
     return (
         <div className="h-full flex-col flex">
-            <div className="h-fit pb-2 text-2xl font-semibold">Team</div>
             <div className="card flex flex-col flex-grow  gap-2 ">
+                <div className="title">Team</div>
                 {page === 1 && (
                     <div className="transition-opacity duration-1000 opacity-100">
-                        <nav className="flex items-center gap-2">
+                        <nav className="flex items-center gap-2 border-b pb-2 border-gray-200 h-12">
                             <input
-                                className="ml-2 border border-slate-300 w-full"
+                                className="ml-2 border  border-slate-300 w-full h-full"
                                 type="text"
                                 placeholder="Search..."
                                 value={searchTerm}

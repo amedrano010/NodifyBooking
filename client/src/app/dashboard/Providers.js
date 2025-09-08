@@ -2,8 +2,8 @@
 
 import React from "react";
 
-import { UserProvider } from "./context/userContext.js";
-import { CartProvider } from "./context/cartContext.js";
+import { UserProvider } from "../context/userContext.js";
+import { CartProvider } from "../context/cartContext.js";
 
 function Providers({ children }) {
     return (

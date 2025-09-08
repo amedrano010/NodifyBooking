@@ -7,7 +7,7 @@ import axios from "axios";
 import { Calendar, momentLocalizer } from "react-big-calendar";
 import { PlusIcon } from "@heroicons/react/24/outline";
 import moment from "moment";
-import { useUser } from "../context/userContext";
+import { useUser } from "../../context/userContext";
 
 const localizer = momentLocalizer(moment);
 
@@ -15,7 +15,20 @@ const CalendarPage = (props) => {
     //console.log(moment("29/1/2025 09:15:00", "DD/MM/YYYY hh:mm:ss"));
     //const { user } = useContext(UserContext);
     const { user, setUser } = useUser();
-    const [appointments, setappointments] = useState([]);
+
+    let start = new Date();
+    start.setHours(12, 0, 0);
+    let end = new Date();
+    end.setHours(13, 0, 0);
+
+    const [appointments, setappointments] = useState([
+        {
+            title: "Hair appointment",
+            start: start,
+            end: end,
+            allDay: false,
+        },
+    ]);
     const [refresh, setRefresh] = useState(false);
 
     useEffect(() => {
@@ -49,8 +62,8 @@ const CalendarPage = (props) => {
 
     return (
         <div className="calendarpage flex flex-col h-full max-h-full ">
-            <div className="mb-2 text-2xl font-semibold">Calendar</div>
             <div className="card h-full flex flex-col gap-2 overflow-hidden ">
+                <div className="title ">Calendar</div>
                 <Calendar
                     className=""
                     localizer={localizer}

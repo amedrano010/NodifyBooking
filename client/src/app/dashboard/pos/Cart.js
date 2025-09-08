@@ -1,6 +1,6 @@
 import React, { useContext, useState } from "react";
 
-import { useCart } from "../context/cartContext";
+import { useCart } from "../../context/cartContext";
 import {
     Table,
     List,
@@ -13,7 +13,7 @@ import {
 } from "flowbite-react";
 import Link from "next/link";
 
-function Cart(props) {
+function Cart({ setView }) {
     const { cart } = useCart();
 
     let sub = 0;
@@ -37,9 +37,6 @@ function Cart(props) {
 
     return (
         <div className="h-full w-full py-2 flex flex-col gap-4 ">
-            <button className="sm:hidden px-4 w-full py-2 bg-gray-400 shadow-md text-white rounded-sm flex justify-center items-center gap-1 cursor-pointer">
-                Add Customer
-            </button>
             <div className="min-h-40 overflow-x-auto flex-grow">
                 <Table striped>
                     <TableHead>
@@ -104,17 +101,15 @@ function Cart(props) {
             </div>
 
             <div className="flex flex-row gap-2">
-                <Link
-                    href="/pos"
+                <div
+                    onClick={() => setView("pos")}
+                    href="/dashboard/pos"
                     className="sm:hidden px-4 w-full py-2 bg-gray-400 shadow-md text-white rounded-sm flex justify-center items-center gap-1 cursor-pointer"
                 >
                     Back
-                </Link>
-                <button className="hidden sm:block px-4 w-full py-2 bg-gray-400 shadow-md text-white rounded-sm flex justify-center items-center gap-1 cursor-pointer">
-                    Add Customer
-                </button>
+                </div>
                 <Link
-                    href="/pos/stripe/checkout"
+                    href="dashboard/pos/checkout"
                     className="px-4 w-full py-2 bg-rose-400 shadow-md text-white rounded-sm flex justify-center items-center gap-1 cursor-pointer"
                 >
                     Checkout

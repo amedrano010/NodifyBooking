@@ -5,6 +5,7 @@ import {
     BellIcon,
     XMarkIcon,
     Cog6ToothIcon,
+    PlusIcon,
 } from "@heroicons/react/24/outline";
 
 import {
@@ -21,6 +22,8 @@ import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
 import { usePathname } from "next/navigation";
+
+import AddMenu from "./AddMenu";
 
 export default function Component({
     user,
@@ -56,19 +59,21 @@ export default function Component({
     };
 
     return (
-        <div className="flex flex-col   bg-white ">
-            <div className="flex px-2 py-2  w-full md:order-2 border-b border-gray-200 justify-between">
+        <div className=" flex flex-col bg-[var(--color-onyx)] sm:bg-[var(--color-whitish)] border-b border-b-gray-300 ">
+            <div className="flex px-2 py-2  w-full md:order-2  justify-between">
                 <div
                     onClick={() => setSidebarOpen((prev) => !prev)}
-                    className="flex justify-center items-center "
+                    className="flex justify-center items-center gap-2 "
                 >
-                    <Bars3Icon className="h-6 w-6 text-gray-600" />
+                    <Bars3Icon className="h-6 w-6 text-white sm:text-gray-600" />
+                    <p className="text-lg text-white sm:text-gray-600">
+                        Nodify
+                    </p>
                 </div>
 
                 <div className="flex items-center gap-2">
-                    <div>
-                        <BellIcon className="h-6 w-6 text-gray-600" />
-                    </div>
+                    <AddMenu />
+
                     <Dropdown
                         className=""
                         arrowIcon={false}
@@ -106,16 +111,16 @@ export default function Component({
                 </div>
             </div>
             <div
-                className={`border-b border-gray-200 sm:hidden w-full list-none ${
+                className={`menu absolute left-0 top-14 z-50 border-b border-gray-300 sm:hidden w-full list-none bg-[var(--color-onyx)] text-white shadow-lg ${
                     sidebarOpen ? "flex flex-col" : "hidden"
-                } `}
+                }`}
             >
                 {navLinks.map((link, i) => {
                     return (
                         <Link
-                            className={`p-2 ${
+                            className={`p-2 ${link.class} ${
                                 link.href == pathname
-                                    ? "bg-slate-500 text-white"
+                                    ? "bg-[var(--color-silver)] text-onyx"
                                     : ""
                             }`}
                             key={i}

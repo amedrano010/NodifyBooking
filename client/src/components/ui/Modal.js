@@ -13,14 +13,14 @@ function Modal({
         <>
             <div
                 className={`overlay ${
-                    isOpen ? "" : "hidden"
+                    isOpen ? "bg-black" : "hidden"
                 } max-h-screen max-w-screen`}
             ></div>
 
             <div
                 className={`${
                     isOpen ? " " : "hidden"
-                } modal bg-white rounded-lg w-5/6 h-5/6 max-h-5/6 lg:h-fit lg:w-1/2 absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 shadow-lg ${className} overflow-hidden  `}
+                } modal bg-white border rounded-lg w-5/6 h-5/6 max-h-5/6 lg:h-fit lg:w-1/2 absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 shadow-lg ${className} overflow-hidden  `}
                 style={style}
             >
                 <div className="p-4 flex-grow overflow-y-auto pb-16 max-h-full">

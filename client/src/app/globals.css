@@ -30,7 +30,7 @@
 
 @layer components {
     .btn-primary {
-        @apply bg-indigo-500 text-white px-4 py-2 rounded-sm cursor-pointer flex gap-1 items-center w-fit;
+        @apply bg-[var(--color-onyx)] text-white px-4 py-2 rounded-sm cursor-pointer flex gap-1 items-center w-fit;
     }
 
     .btn-minimal {
@@ -38,7 +38,7 @@
     }
 
     .card {
-        @apply w-full bg-white  p-2 sm:p-8 sm:rounded-sm border border-gray-50;
+        @apply w-full  p-2 sm:p-8 sm:rounded-sm border border-gray-50;
     }
 
     .title {
@@ -55,4 +55,14 @@ body {
 
 input::placeholder {
     padding-left: 5px;
+}
+
+input {
+    padding-left: 10px;
+}
+
+input {
+    border: 1px solid #c1c1c1;
+    background-color: white;
+    border-radius: 3px !important;
 }

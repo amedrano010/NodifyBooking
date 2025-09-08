@@ -5,7 +5,7 @@ import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
 import { Datepicker } from "flowbite-react";
 import axios from "axios";
-import { UserContext } from "@/app/context/userContext";
+import { UserContext } from "@/app/dashboard/context/userContext";
 
 function TimeSlot({ state, setState, services, store, mode }) {
     const [slots, setSlots] = useState([]);

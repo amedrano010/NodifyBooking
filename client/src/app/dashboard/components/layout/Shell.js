@@ -13,9 +13,10 @@ import {
     UserGroupIcon,
     PaperAirplaneIcon,
     CreditCardIcon,
+    UsersIcon,
 } from "@heroicons/react/24/outline";
 
-import { useUser } from "../context/userContext";
+import { useUser } from "../../context/userContext";
 import { useState, createContext, useContext } from "react";
 
 import { Spinner } from "flowbite-react";
@@ -53,7 +54,7 @@ function Shell({ children }) {
         {
             name: "Clients",
             href: "/dashboard/clients",
-            icon: <FaceSmileIcon className="h-5 " />,
+            icon: <UsersIcon className="h-5 " />,
             class: "",
         },
         {
@@ -81,7 +82,7 @@ function Shell({ children }) {
                             setSidebarOpen={setSidebarOpen}
                             navLinks={navLinks}
                         />
-                        <div className="flex-grow overflow-y-auto overflow-x-hidden  ">
+                        <div className="flex-grow overflow-y-auto overflow-x-hidden bg-[var(--color-whitish)] sm:bg-white">
                             {children}
                         </div>
                     </div>

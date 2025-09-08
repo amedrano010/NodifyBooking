@@ -1,32 +1,24 @@
 "use client";
 
-import { Modal, List, Toast } from "flowbite-react";
-import { ConfirmModal } from "../Flowbite/ConfirmModal";
+import { List, Toast } from "flowbite-react";
 import axios from "axios";
 import { useState, useContext, useEffect } from "react";
 import { Breadcrumb } from "flowbite-react";
-import TimeSlot from "../Components/TimeSlot";
+import TimeSlot from "@/components/ui/TimeSlot";
 import moment from "moment";
 import { PlusCircleIcon } from "@heroicons/react/24/outline";
-import { UserContext } from "../../context/UserContext";
+import { UserContext } from "@/app/dashboard/context/userContext";
 
-export default function Component({
-    openModal,
-    setOpenModal,
-    setRefreshAppointments,
-}) {
-    const [confirmModal, setConfirmModal] = useState(false);
-    const [confirmMessage, setConfirmMessage] = useState("");
+import Modal from "@/components/Modal";
 
+export default function Component({ open, setOpen, setRefreshAppointments }) {
     const { user } = useContext(UserContext);
     const [newCustomer, setNewCustomer] = useState(false);
     const [currentPage, setCurrentPage] = useState(1);
     const [searchQuery, setSearchQuery] = useState("");
     const [searchResults, setSearchResults] = useState([]);
-
     const [errors, setErrors] = useState({});
     const [validUser, setValidUser] = useState(false);
-
     const [providers, setProviders] = useState({});
     const [formData, setFormData] = useState({
         customer: "",
@@ -39,20 +31,22 @@ export default function Component({
     });
 
     useEffect(() => {
-        try {
-            axios
-                .get("employees", { params: { store: user.selectedStore } })
-                .then((res) => {
-                    const employees = res.data;
-                    setProviders({
-                        selectedProvider: res.data[0].employee._id,
-                        providers: employees,
+        if (open) {
+            try {
+                axios
+                    .get("employees", { params: { store: user.selectedStore } })
+                    .then((res) => {
+                        const employees = res.data;
+                        setProviders({
+                            selectedProvider: res.data[0].employee._id,
+                            providers: employees,
+                        });
                     });
-                });
-        } catch (err) {
-            console.log(err);
+            } catch (err) {
+                console.log(err);
+            }
         }
-    }, [openModal]);
+    }, [open]);
 
     const handleSearchChange = (e) => {
         setSearchQuery(e.target.value);
@@ -309,466 +303,268 @@ export default function Component({
     return (
         <>
             <Modal
-                theme={modalTheme}
-                className=""
-                show={openModal}
-                size="md"
-                position="center"
-                popup
-                onClose={() => {
-                    setOpenModal(false);
-                    setCurrentPage(1);
-                    setNewCustomer(false);
-                    setFormData({
-                        customer: "",
-                        first: "",
-                        last: "",
-                        phone: "",
-                        email: "",
-                        date: new Date(),
-                        slot: {},
-                    });
-                    setProviders({});
-                }}
+                open={open}
+                setOpen={() => setOpen(false)}
+                title={"New Appointment"}
             >
-                <Modal.Header>New Appointment</Modal.Header>
-                <Modal.Body>
-                    <Breadcrumb theme={theme}>
-                        <Breadcrumb.Item onClick={(e) => e.preventDefault()}>
-                            Customer
-                        </Breadcrumb.Item>
-                        <Breadcrumb.Item onClick={(e) => e.preventDefault()}>
-                            Services
-                        </Breadcrumb.Item>
-                        <Breadcrumb.Item onClick={(e) => e.preventDefault()}>
-                            Appointment
-                        </Breadcrumb.Item>
-                    </Breadcrumb>
-                    <form
-                        className="py-4 flex flex-col h-full"
-                        onSubmit={submitOk}
-                    >
-                        {currentPage === 1 && (
-                            <>
-                                {!newCustomer ? (
-                                    <>
-                                        <div className="flex flex-col flex-1">
-                                            <div
-                                                className="flex  items-center  gap-1 self-end bg-gray-400 w-fit py-2 px-4 rounded-sm text-white cursor-pointer shadow-md"
-                                                onClick={() => {
-                                                    setNewCustomer(true);
-                                                    setFormData((prev) => ({
-                                                        ...prev,
-                                                        first: "",
-                                                        last: "",
-                                                        phone: "",
-                                                        email: "",
-                                                        customer: "",
-                                                    }));
-                                                    setSearchQuery("");
-                                                    setSearchResults([]);
-                                                    setValidUser(false);
-                                                    setErrors({});
-                                                }}
-                                            >
-                                                <PlusCircleIcon className="h-5" />
-                                                Customer
-                                            </div>
-
-                                            <div className=" overflow-y-hidden">
-                                                <div className=" mb-3">
-                                                    <label
-                                                        htmlFor="searchClient"
-                                                        className="mb-2 text-sm font-medium text-gray-900 dark:text-white"
-                                                    >
-                                                        Search Customer
-                                                    </label>
-                                                    <input
-                                                        type="text"
-                                                        name="searchClient"
-                                                        id="searchClient"
-                                                        className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500"
-                                                        placeholder="Search by name, email, or phone number"
-                                                        value={searchQuery}
-                                                        onChange={
-                                                            handleSearchChange
-                                                        }
-                                                    />
-                                                </div>
-
-                                                {searchResults.length > 0 && (
-                                                    <List
-                                                        unstyled
-                                                        className="max-w-md divide-y divide-gray-200 dark:divide-gray-700 overflow-y-auto"
-                                                    >
-                                                        {searchResults.map(
-                                                            (client) => (
-                                                                <List.Item
-                                                                    key={
-                                                                        client._id
-                                                                    }
-                                                                    className={`${
-                                                                        client._id ===
-                                                                        formData.customer
-                                                                            ? "bg-gray-100 hover:bg-green-100 hover:bg-geen-100"
-                                                                            : ""
-                                                                    } p-3 cursor-pointer  text-sm border-t flex items-center justify-between`}
-                                                                    onClick={() =>
-                                                                        handleClientSelect(
-                                                                            client
-                                                                        )
-                                                                    }
-                                                                >
-                                                                    <div>
-                                                                        <div>
-                                                                            {
-                                                                                client.first
-                                                                            }{" "}
-                                                                            {
-                                                                                client.last
-                                                                            }
-                                                                        </div>
-                                                                        <div>
-                                                                            {
-                                                                                client.phone
-                                                                            }
-                                                                        </div>
-                                                                    </div>
-
-                                                                    <div>
-                                                                        {
-                                                                            client.email
-                                                                        }
-                                                                    </div>
-                                                                </List.Item>
-                                                            )
-                                                        )}
-                                                    </List>
-                                                )}
-                                            </div>
-                                        </div>
-                                    </>
-                                ) : (
-                                    <>
-                                        <div className="flex flex-col flex-grow">
-                                            <div
-                                                className="self-end bg-gray-400 w-fit py-2 px-4 rounded-sm text-white cursor-pointer shadow-md"
-                                                onClick={() => {
-                                                    setNewCustomer(false);
-                                                    setFormData((prev) => ({
-                                                        ...prev,
-                                                        first: "",
-                                                        last: "",
-                                                        phone: "",
-                                                        email: "",
-                                                        customer: "",
-                                                    }));
-                                                    setValidUser(false);
-                                                    setErrors({});
-                                                }}
-                                            >
-                                                Search Customer
-                                            </div>
-
-                                            <div className="flex-grow mt-2">
-                                                <div className="mb-3">
-                                                    <label
-                                                        htmlFor="first"
-                                                        className="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
-                                                    >
-                                                        First Name
-                                                    </label>
-                                                    <input
-                                                        type="text"
-                                                        name="first"
-                                                        id="first"
-                                                        className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500"
-                                                        placeholder="Enter first name"
-                                                        value={formData.first}
-                                                        onChange={handleChange}
-                                                        required
-                                                    />
-                                                    {errors.first && (
-                                                        <p className="text-red-500 text-sm">
-                                                            {errors.first}
-                                                        </p>
-                                                    )}
-                                                </div>
-                                                <div className="mb-3">
-                                                    <label
-                                                        htmlFor="last"
-                                                        className="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
-                                                    >
-                                                        Last Name
-                                                    </label>
-                                                    <input
-                                                        type="text"
-                                                        name="last"
-                                                        id="last"
-                                                        className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500"
-                                                        placeholder="Enter last name"
-                                                        value={formData.last}
-                                                        onChange={handleChange}
-                                                        required
-                                                    />
-                                                    {errors.last && (
-                                                        <p className="text-red-500 text-sm">
-                                                            {errors.last}
-                                                        </p>
-                                                    )}
-                                                </div>
-                                                <div className="mb-3">
-                                                    <label
-                                                        htmlFor="email"
-                                                        className="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
-                                                    >
-                                                        Email
-                                                    </label>
-                                                    <input
-                                                        type="email"
-                                                        name="email"
-                                                        id="email"
-                                                        className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500"
-                                                        placeholder="Enter email"
-                                                        value={formData.email}
-                                                        onChange={handleChange}
-                                                        required
-                                                    />
-                                                    {errors.email && (
-                                                        <p className="text-red-500 text-sm">
-                                                            {errors.email}
-                                                        </p>
-                                                    )}
-                                                </div>
-                                                <div className="mb-3">
-                                                    <label
-                                                        htmlFor="phone"
-                                                        className="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
-                                                    >
-                                                        Phone
-                                                    </label>
-                                                    <input
-                                                        type="tel"
-                                                        name="phone"
-                                                        id="phone"
-                                                        className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500"
-                                                        placeholder="Enter phone number"
-                                                        value={formData.phone}
-                                                        onChange={handleChange}
-                                                        required
-                                                    />
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </>
-                                )}
-
-                                <div className="flex justify-end mt-2">
-                                    <div
-                                        type=""
-                                        className={`${
-                                            formData.customer
-                                                ? ``
-                                                : `opacity-50 pointer-events-none`
-                                        } px-4 w-1/2 py-2 bg-rose-400 shadow-md text-white rounded-sm flex justify-center items-center gap-1 cursor-pointer`}
-                                        onClick={(e) => {
-                                            validate(formData);
-
-                                            if (validUser) {
-                                                setCurrentPage(2);
-                                            }
-                                        }}
-                                    >
-                                        Next
-                                    </div>
-                                </div>
-                            </>
-                        )}
-                        {currentPage === 2 && (
-                            <>
-                                <div className="flex-grow">
-                                    <div className="mt-2">
+                <form
+                    className=" pt-4 flex flex-col  flex-grow "
+                    onSubmit={submitOk}
+                >
+                    {currentPage === 1 && (
+                        <>
+                            <div className="flex flex-col flex-grow  h-full">
+                                <div className=" overflow-y-hidden">
+                                    <div className=" mb-3">
                                         <label
-                                            htmlFor="serviceProvider"
-                                            className="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
+                                            htmlFor="searchClient"
+                                            className="mb-2 font-semibold  "
                                         >
-                                            Service Provider
+                                            Search Customer
                                         </label>
-                                        <select
-                                            name="serviceProvider"
-                                            id="serviceProvider"
-                                            value={providers.selectedProvider}
+                                        <input
+                                            type="text"
+                                            name="searchClient"
+                                            id="searchClient"
                                             className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500"
-                                            onChange={(e) => {
-                                                setProviders((prevObj) => ({
-                                                    ...prevObj,
-                                                    selectedProvider:
-                                                        e.target.value,
-                                                }));
-                                            }}
-                                            required
-                                        >
-                                            {providers.providers?.map(
-                                                (obj, i) => (
-                                                    <option
-                                                        key={i}
-                                                        value={obj.employee._id}
-                                                    >
-                                                        {obj.employee.first}{" "}
-                                                        {obj.employee.last[0].toUpperCase()}
-                                                    </option>
-                                                )
-                                            )}
-                                        </select>
+                                            placeholder="Search by name, email, or phone number"
+                                            value={searchQuery}
+                                            onChange={handleSearchChange}
+                                        />
                                     </div>
-                                    <div className="mt-3">
-                                        <label
-                                            htmlFor="service"
-                                            className="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
-                                        >
-                                            Service Type
-                                        </label>
-                                        <div className="flex flex-col gap-2 overflow-y-auto">
-                                            {providerServices.map((item, i) => {
-                                                return (
-                                                    <div
-                                                        onClick={() => {
-                                                            setProviders(
-                                                                (prevObj) => {
-                                                                    const updatedProviders =
-                                                                        prevObj.providers.map(
-                                                                            (
-                                                                                oEmp
-                                                                            ) =>
-                                                                                oEmp
-                                                                                    .employee
-                                                                                    ._id ===
-                                                                                prevObj.selectedProvider
-                                                                                    ? {
-                                                                                          ...oEmp,
-                                                                                          services:
-                                                                                              oEmp.services.map(
-                                                                                                  (
-                                                                                                      oService
-                                                                                                  ) =>
-                                                                                                      oService._id ===
-                                                                                                      item._id
-                                                                                                          ? {
-                                                                                                                ...oService,
-                                                                                                                selected:
-                                                                                                                    !oService.selected,
-                                                                                                            }
-                                                                                                          : oService
-                                                                                              ),
-                                                                                      }
-                                                                                    : oEmp
-                                                                        );
 
-                                                                    return {
-                                                                        ...prevObj,
-                                                                        providers:
-                                                                            updatedProviders,
-                                                                    };
-                                                                }
-                                                            );
-                                                        }}
-                                                        className={`${
-                                                            item.selected
-                                                                ? "bg-indigo-500 text-white"
-                                                                : "bg-gray-100"
-                                                        } cursor-pointer items-center flex border px-4 py-2 rounded-lg justify-between `}
-                                                        key={i}
-                                                    >
-                                                        <div className="flex flex-col ">
-                                                            <div>
-                                                                {item.name}
-                                                            </div>
-                                                            <div className="text-sm">
-                                                                ${item.price}
-                                                            </div>
+                                    {searchResults.length > 0 && (
+                                        <List
+                                            unstyled
+                                            className="max-w-md divide-y divide-gray-200 dark:divide-gray-700 overflow-y-auto"
+                                        >
+                                            {searchResults.map((client) => (
+                                                <List.Item
+                                                    key={client._id}
+                                                    className={`${
+                                                        client._id ===
+                                                        formData.customer
+                                                            ? "bg-gray-100 hover:bg-green-100 hover:bg-geen-100"
+                                                            : ""
+                                                    } p-3 cursor-pointer  text-sm border-t flex items-center justify-between`}
+                                                    onClick={() =>
+                                                        handleClientSelect(
+                                                            client
+                                                        )
+                                                    }
+                                                >
+                                                    <div>
+                                                        <div>
+                                                            {client.first}{" "}
+                                                            {client.last}
                                                         </div>
                                                         <div>
-                                                            {item.duration} min
+                                                            {client.phone}
                                                         </div>
                                                     </div>
-                                                );
-                                            })}
-                                        </div>
-                                    </div>
+
+                                                    <div>{client.email}</div>
+                                                </List.Item>
+                                            ))}
+                                        </List>
+                                    )}
                                 </div>
+                            </div>
 
-                                <div className="flex justify-end mt-2 gap-1">
-                                    <div
-                                        type=""
-                                        className="px-4 w-1/2 py-2 bg-gray-400 shadow-md text-white rounded-sm flex justify-center items-center gap-1 cursor-pointer"
-                                        onClick={(e) => {
-                                            e.preventDefault();
-                                            setCurrentPage(1);
-                                        }}
-                                    >
-                                        Back
-                                    </div>
+                            <div className="flex justify-end ">
+                                <div
+                                    type=""
+                                    className={`${
+                                        formData.customer
+                                            ? ``
+                                            : `opacity-50 pointer-events-none`
+                                    } btn-primary`}
+                                    onClick={(e) => {
+                                        validate(formData);
 
-                                    <div
-                                        type=""
-                                        className={`${
-                                            selectedServices.length > 0
-                                                ? ""
-                                                : "opacity-50 pointer-events-none"
-                                        } px-4 w-1/2 py-2 bg-rose-400 shadow-md text-white rounded-sm flex justify-center items-center gap-1 cursor-pointer`}
-                                        onClick={(e) => {
-                                            setCurrentPage(3);
-                                        }}
-                                    >
-                                        Next
-                                    </div>
-                                </div>
-                            </>
-                        )}
-
-                        {currentPage === 3 && (
-                            <>
-                                <div className="flex-grow flex flex-col overflow-y-hidden px-2 h-full">
-                                    <TimeSlot
-                                        state={formData}
-                                        setState={setFormData}
-                                        services={selectedServices}
-                                    />
-                                </div>
-
-                                <div className="flex justify-end mt-2 gap-1 ">
-                                    <div
-                                        type=""
-                                        className="px-4 w-1/2 py-2 bg-gray-400 shadow-md text-white rounded-sm flex justify-center items-center gap-1 cursor-pointer"
-                                        onClick={(e) => {
-                                            e.preventDefault();
+                                        if (validUser) {
                                             setCurrentPage(2);
+                                        }
+                                    }}
+                                >
+                                    Next
+                                </div>
+                            </div>
+                        </>
+                    )}
+                    {currentPage === 2 && (
+                        <>
+                            <div className="flex-grow">
+                                <div className="mt-2">
+                                    <label
+                                        htmlFor="serviceProvider"
+                                        className="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
+                                    >
+                                        Service Provider
+                                    </label>
+                                    <select
+                                        name="serviceProvider"
+                                        id="serviceProvider"
+                                        value={providers.selectedProvider}
+                                        className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500"
+                                        onChange={(e) => {
+                                            setProviders((prevObj) => ({
+                                                ...prevObj,
+                                                selectedProvider:
+                                                    e.target.value,
+                                            }));
                                         }}
+                                        required
                                     >
-                                        Back
-                                    </div>
+                                        {providers.providers?.map((obj, i) => (
+                                            <option
+                                                key={i}
+                                                value={obj.employee._id}
+                                            >
+                                                {obj.employee.first}{" "}
+                                                {obj.employee.last[0].toUpperCase()}
+                                            </option>
+                                        ))}
+                                    </select>
+                                </div>
+                                <div className="mt-3">
+                                    <label
+                                        htmlFor="service"
+                                        className="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
+                                    >
+                                        Service Type
+                                    </label>
+                                    <div className="flex flex-col gap-2 overflow-y-auto">
+                                        {providerServices.map((item, i) => {
+                                            return (
+                                                <div
+                                                    onClick={() => {
+                                                        setProviders(
+                                                            (prevObj) => {
+                                                                const updatedProviders =
+                                                                    prevObj.providers.map(
+                                                                        (
+                                                                            oEmp
+                                                                        ) =>
+                                                                            oEmp
+                                                                                .employee
+                                                                                ._id ===
+                                                                            prevObj.selectedProvider
+                                                                                ? {
+                                                                                      ...oEmp,
+                                                                                      services:
+                                                                                          oEmp.services.map(
+                                                                                              (
+                                                                                                  oService
+                                                                                              ) =>
+                                                                                                  oService._id ===
+                                                                                                  item._id
+                                                                                                      ? {
+                                                                                                            ...oService,
+                                                                                                            selected:
+                                                                                                                !oService.selected,
+                                                                                                        }
+                                                                                                      : oService
+                                                                                          ),
+                                                                                  }
+                                                                                : oEmp
+                                                                    );
 
-                                    <button
-                                        className={`${
-                                            formData.slot.time
-                                                ? ""
-                                                : "opacity-50 pointer-events-none"
-                                        } px-4 w-1/2 py-2 bg-rose-400 shadow-md text-white rounded-sm flex justify-center items-center gap-1 cursor-pointer`}
-                                    >
-                                        Submit
-                                    </button>
+                                                                return {
+                                                                    ...prevObj,
+                                                                    providers:
+                                                                        updatedProviders,
+                                                                };
+                                                            }
+                                                        );
+                                                    }}
+                                                    className={`${
+                                                        item.selected
+                                                            ? "bg-indigo-500 text-white"
+                                                            : "bg-gray-100"
+                                                    } cursor-pointer items-center flex border px-4 py-2 rounded-lg justify-between `}
+                                                    key={i}
+                                                >
+                                                    <div className="flex flex-col ">
+                                                        <div>{item.name}</div>
+                                                        <div className="text-sm">
+                                                            ${item.price}
+                                                        </div>
+                                                    </div>
+                                                    <div>
+                                                        {item.duration} min
+                                                    </div>
+                                                </div>
+                                            );
+                                        })}
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div className="flex justify-end mt-2 gap-1">
+                                <div
+                                    type=""
+                                    className="px-4 w-1/2 py-2 bg-gray-400 shadow-md text-white rounded-sm flex justify-center items-center gap-1 cursor-pointer"
+                                    onClick={(e) => {
+                                        e.preventDefault();
+                                        setCurrentPage(1);
+                                    }}
+                                >
+                                    Back
                                 </div>
 
-                                <ConfirmModal
-                                    openModal={confirmModal}
-                                    setOpenModal={setConfirmModal}
-                                    message={confirmMessage}
-                                    handleConfirm={handleSubmit}
+                                <div
+                                    type=""
+                                    className={`${
+                                        selectedServices?.length > 0
+                                            ? ""
+                                            : "opacity-50 pointer-events-none"
+                                    } px-4 w-1/2 py-2 bg-rose-400 shadow-md text-white rounded-sm flex justify-center items-center gap-1 cursor-pointer`}
+                                    onClick={(e) => {
+                                        setCurrentPage(3);
+                                    }}
+                                >
+                                    Next
+                                </div>
+                            </div>
+                        </>
+                    )}
+
+                    {currentPage === 3 && (
+                        <>
+                            <div className="flex-grow flex flex-col overflow-y-hidden px-2 h-full">
+                                <TimeSlot
+                                    state={formData}
+                                    setState={setFormData}
+                                    services={selectedServices}
                                 />
-                            </>
-                        )}
-                    </form>
-                </Modal.Body>
+                            </div>
+
+                            <div className="flex justify-end mt-2 gap-1 ">
+                                <div
+                                    type=""
+                                    className="px-4 w-1/2 py-2 bg-gray-400 shadow-md text-white rounded-sm flex justify-center items-center gap-1 cursor-pointer"
+                                    onClick={(e) => {
+                                        e.preventDefault();
+                                        setCurrentPage(2);
+                                    }}
+                                >
+                                    Back
+                                </div>
+
+                                <button
+                                    className={`${
+                                        formData.slot.time
+                                            ? ""
+                                            : "opacity-50 pointer-events-none"
+                                    } px-4 w-1/2 py-2 bg-rose-400 shadow-md text-white rounded-sm flex justify-center items-center gap-1 cursor-pointer`}
+                                >
+                                    Submit
+                                </button>
+                            </div>
+                        </>
+                    )}
+                </form>
             </Modal>
         </>
     );

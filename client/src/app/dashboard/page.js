@@ -330,7 +330,7 @@ function HomePage(props) {
                                         ?.map((item, i) => {
                                             return (
                                                 <ListItem
-                                                    className={` px-2 rounded-xs py-3 ${
+                                                    className={` px-2 rounded-xs border-b-gray-300 py-3 ${
                                                         item.status ===
                                                         "Confirmed"
                                                             ? "bg-green-100"

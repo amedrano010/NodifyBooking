@@ -23,7 +23,7 @@ import { useRouter } from "next/navigation";
 import { useState } from "react";
 import { usePathname } from "next/navigation";
 
-import AddMenu from "./AddMenu";
+import AddMenu from "@/app/dashboard/components/ui/NewMenu";
 
 export default function Component({
     user,

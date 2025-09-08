@@ -7,7 +7,7 @@ import axios from "axios";
 import { Calendar, momentLocalizer } from "react-big-calendar";
 import { PlusIcon } from "@heroicons/react/24/outline";
 import moment from "moment";
-import { useUser } from "../../context/userContext";
+import { useUser } from "../context/userContext";
 
 const localizer = momentLocalizer(moment);
 

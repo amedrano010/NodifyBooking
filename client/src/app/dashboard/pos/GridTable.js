@@ -8,7 +8,7 @@ import {
     PhotoIcon,
 } from "@heroicons/react/16/solid";
 
-import { useUser } from "../../context/userContext.js";
+import { useUser } from "../context/userContext.js";
 
 function GridTable({ view, items, setItems, fetchProducts, fetchServices }) {
     const { user } = useUser;

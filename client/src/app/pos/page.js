@@ -6,16 +6,13 @@ import Cart from "./Cart";
 import { Breadcrumb, BreadcrumbItem, Button } from "flowbite-react";
 import Link from "next/link";
 
-import { useCart } from "../context/cartContext";
+import { useCart } from "../dashboard/context/cartContext";
 
 export default function POSPage({ children }) {
-    const [view, setView] = useState("pos"); // products, cart, checkout
+    const [view, setView] = useState("cart"); // products, cart, checkout
 
     const { cart, setCart } = useCart();
-
     const total = cart?.items?.length;
-
-    console.log(view);
 
     return (
         <div className="flex flex-col h-full overflow-hidden">
@@ -30,7 +27,7 @@ export default function POSPage({ children }) {
                 </div>
 
                 <div className="flex-grow flex flex-col h-full max-h-full overflow-y-hidden overflow-x-hidden">
-                    {view == "pos" && (
+                    {view === "cart" && (
                         <>
                             <div className="flex flex-col h-full">
                                 <div className="flex-grow flex overflow-y-auto">
@@ -42,24 +39,17 @@ export default function POSPage({ children }) {
                                     </div>
                                 </div>
                                 <footer className="flex w-full mt-2 justify-end">
-                                    <div
-                                        onClick={() => setView("cart")}
-                                        className={`btn-minimal ${
+                                    <Button
+                                        className={`sm:hidden px-4  py-2 w-full sm:w-fit bg-rose-400 shadow-md text-white rounded-sm flex justify-center items-center gap-1 cursor-pointer ${
                                             total === 0
                                                 ? "cursor-not-allowed opacity-80"
                                                 : ""
                                         }`}
                                     >
                                         View Cart {total ? `(${total})` : ""}
-                                    </div>
+                                    </Button>
                                 </footer>
                             </div>
-                        </>
-                    )}
-
-                    {view == "cart" && (
-                        <>
-                            <Cart setView={setView} />
                         </>
                     )}
                 </div>

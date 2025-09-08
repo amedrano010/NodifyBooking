@@ -5,14 +5,16 @@ import { useState } from "react";
 import GridTable from "./GridTable";
 import { ShoppingBagIcon, SparklesIcon } from "@heroicons/react/24/outline";
 import { useContext, useEffect } from "react";
-import { CartContext } from "../context/cartContext";
+import { CartContext } from "../dashboard/context/cartContext";
 import axios from "axios";
-import { UserContext } from "../context/userContext";
+import { UserContext } from "../dashboard/context/userContext";
 
 export default function Component() {
     const baseUrl = process.env.REACT_APP_BASE_URL;
 
     const { user } = useContext(UserContext);
+
+    console.log(user);
     const { cart, setCart } = useContext(CartContext);
 
     const theme = {
@@ -75,13 +77,7 @@ export default function Component() {
         tabpanel: "h-full overflow-hidden",
     };
 
-    const [products, setProducts] = useState([
-        {
-            images: [],
-            name: "test",
-            price: 10,
-        },
-    ]);
+    const [products, setProducts] = useState([]);
 
     const [services, setServices] = useState([]);
 

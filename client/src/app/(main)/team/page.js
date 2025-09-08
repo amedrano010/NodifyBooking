@@ -9,7 +9,7 @@ import {
 import { Avatar, List, ListItem, Table, Checkbox } from "flowbite-react";
 import TeamForm from "../forms/TeamForm";
 import axios from "axios";
-import { useUser } from "../context/userContext";
+import { useUser } from "../../dashboard/context/userContext";
 
 function Team(props) {
     const avatarTheme = {
